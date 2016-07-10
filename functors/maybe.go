@@ -2,40 +2,47 @@ package functors;
 
 import (
 )
-import . "github.com/sqdron/go-category"
+import (
+	. "github.com/sqdron/go-category"
+	"fmt"
+)
 
-type Just struct {
-	Value interface{}
+type Maybe struct {
+	val *interface{}
 }
 
-type Nothing struct{}
+var None = Maybe{nil}
 
-func (j Just) Return(value interface{}) Monad {
-	return Just{Value:value}
+
+func Some(a interface{}) Monad {
+	return Maybe{&a}
 }
 
-func (j Just) GetValue() interface {} {
-	return j.Value;
+func Nothing() Monad {
+	return None;
 }
 
-func (j Just) Bind(fn func(interface{}) Monad) Monad {
-	return fn(j.Value)
+func (m Maybe) Return(value interface{}) Monad {
+	return Some(value)
 }
 
-func (n Nothing) Return(value interface{}) Monad {
-	return Nothing{}
+func (m Maybe) GetValue() interface{} {
+	if m == None {
+		return nil
+	}
+	return *m.val;
 }
 
-func (n Nothing) Bind(fn func(interface{}) Monad) Monad {
-	return Nothing{}
+func (m Maybe) Bind(f func(interface{}, Monad) Monad) Monad {
+	if m == None {
+		return None
+	}
+	return f(*m.val, m)
 }
 
-func (n Nothing) GetValue() interface {} {
-	return nil;
+func (m Maybe) String() string {
+	if m == None {
+		return "None"
+	}
+	return fmt.Sprintf("Some(%v)", *m.val)
 }
-
-
-
-
-
-
