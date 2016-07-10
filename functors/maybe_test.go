@@ -3,45 +3,75 @@ package functors
 import (
 	"testing"
 	. "github.com/smartystreets/goconvey/convey"
+	. "github.com/sqdron/go-category"
 )
 
-type MaybeApplicatives interface {
-	Maybe
-	Double() MaybeApplicatives;
+type MathMonad interface {
+	Monad
+	Add(value int) MathMonad;
+	Double() MathMonad;
 }
 
-func (j Just) Double() MaybeApplicatives {
-	return j.Bind(func (v interface{}) Maybe {
-		return Just { 2 * v.(int) }
-	}).(MaybeApplicatives);
+func (j Just) ToMath() MathMonad {
+	return Just{}.Return(j.Value).(MathMonad);
 }
 
-func (n Nothing) Double() MaybeApplicatives {
-	return n;
-}
-func MaybeDouble(a Maybe) Maybe {
-	return a.Bind(func (v interface{}) Maybe {
-		return Just { 2 * v.(int) }
-	})
+func (j Nothing) ToMath() MathMonad {
+	return Nothing{}.Return(nil).(MathMonad);
 }
 
-func Test_Maybe_FunctorLaws_Identity(t *testing.T) {
+func DoubleValue(m Monad) Monad {
+	return m.Bind(func(v interface{}) Monad {
+		return Just{2 * v.(int) }
+	});
+}
+
+func AddValue(m Monad, value int) Monad {
+	return m.Bind(func(v interface{}) Monad {
+		return Just{ value + v.(int) }
+	});
+}
+
+func (j Just) Double() MathMonad {
+	return DoubleValue(j).(MathMonad);
+}
+
+func (j Just) Add(value int) MathMonad {
+	return AddValue(j, value).(MathMonad);
+}
+
+
+func (n Nothing) Double() MathMonad {
+	return DoubleValue(n).(MathMonad);
+}
+
+func (n Nothing) Add(value int) MathMonad {
+	return AddValue(n, value).(MathMonad);
+}
+
+
+func Test_Maybe_Functor_Double(t *testing.T) {
 	Convey("Double value several times", t, func() {
-		value := Just{}.Return(3);
-		result := MaybeDouble(value);
-		So(result.GetValue(), ShouldEqual, 6);
-		v2 := Just{2}.Double().Double().Double().GetValue();
-		So(v2, ShouldEqual, 16);
+		value := Just{2}.ToMath().Double();
+		//result := MaybeDouble(value);
+		So(value.GetValue(), ShouldEqual, 4);
+		//v2 := Just{2}.Double().Double().Double().GetValue();
+		//So(v2, ShouldEqual, 16);
 	})
 }
+
+func Test_Maybe_Functor_Double_And_Add(t *testing.T) {
+	Convey("Double value several times", t, func() {
+		value := Just{2}.ToMath().Double().Add(10);
+		So(value.GetValue(), ShouldEqual, 14);
+	})
+}
+
 
 func Test_Maybe_Nothing(t *testing.T) {
 	Convey("Double value several times", t, func() {
-		value := Nothing{};
-		result := MaybeDouble(value);
-		So(result.GetValue(), ShouldEqual, Nothing{}.GetValue());
-		value2 := Nothing{}.Return(nil);
-		result2 := MaybeDouble(value2);
-		So(result2.GetValue(), ShouldEqual, Nothing{}.GetValue());
+		value := Nothing{}.ToMath().Double();
+		//result := MaybeDouble(value);
+		So(value.GetValue(), ShouldEqual, Nothing{}.GetValue());
 	})
 }

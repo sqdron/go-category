@@ -2,12 +2,7 @@ package functors;
 
 import (
 )
-
-type Maybe interface {
-	Return(value interface{}) Maybe
-	Bind(func(interface{}) Maybe) Maybe
-	GetValue() interface{}
-}
+import . "github.com/sqdron/go-category"
 
 type Just struct {
 	Value interface{}
@@ -15,7 +10,7 @@ type Just struct {
 
 type Nothing struct{}
 
-func (j Just) Return(value interface{}) Maybe {
+func (j Just) Return(value interface{}) Monad {
 	return Just{Value:value}
 }
 
@@ -23,15 +18,15 @@ func (j Just) GetValue() interface {} {
 	return j.Value;
 }
 
-func (j Just) Bind(fn func(interface{}) Maybe) Maybe {
+func (j Just) Bind(fn func(interface{}) Monad) Monad {
 	return fn(j.Value)
 }
 
-func (n Nothing) Return(value interface{}) Maybe {
+func (n Nothing) Return(value interface{}) Monad {
 	return Nothing{}
 }
 
-func (n Nothing) Bind(fn func(interface{}) Maybe) Maybe {
+func (n Nothing) Bind(fn func(interface{}) Monad) Monad {
 	return Nothing{}
 }
 
