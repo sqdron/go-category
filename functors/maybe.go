@@ -1,48 +1,30 @@
 package functors;
 
 import (
-)
-import (
 	. "github.com/sqdron/go-category"
-	"fmt"
 )
 
-type Maybe struct {
-	val *interface{}
+type Just struct {
+	value interface{}
 }
 
-var None = Maybe{nil}
+type Nothing struct {}
 
-
-func Some(a interface{}) Monad {
-	return Maybe{&a}
+type IMaybe interface {
+	Fmap(m Morphism) IMaybe;
 }
 
-func Nothing() Monad {
-	return None;
-}
-
-func (m Maybe) Return(value interface{}) Monad {
-	return Some(value)
-}
-
-func (m Maybe) GetValue() interface{} {
-	if m == None {
-		return nil
+func Maybe(val interface{}) IMaybe{
+	if (val == nil){
+		return Nothing{};
 	}
-	return *m.val;
+	return Just{value:val}
 }
 
-func (m Maybe) Bind(f func(interface{}, Monad) Monad) Monad {
-	if m == None {
-		return None
-	}
-	return f(*m.val, m)
+func (n Nothing) Fmap(m Morphism)IMaybe{
+	return Nothing{};
 }
 
-func (m Maybe) String() string {
-	if m == None {
-		return "None"
-	}
-	return fmt.Sprintf("Some(%v)", *m.val)
+func (n Just) Fmap(fn Morphism) IMaybe{
+	return Maybe(fn(n.value));
 }

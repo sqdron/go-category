@@ -1,5 +1,8 @@
 package category
 
-type Functor interface {
-	Fmap(f Morphism, functor Functor) Functor
+type Functor func(interface{})interface{};
+
+type FunctorClass interface {
+	Fmap(f Morphism) func(Functor) Functor;
 }
+
