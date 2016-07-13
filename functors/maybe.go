@@ -4,27 +4,38 @@ import (
 	. "github.com/sqdron/go-category"
 )
 
-type Just struct {
-	value interface{}
+type fMaybe interface {
+	IApplicative
 }
 
-type Nothing struct {}
+//type aMaybe interface {
+//	IApplicative
+//}
 
-type IMaybe interface {
-	Fmap(m Morphism) IMaybe;
-}
 
-func Maybe(val interface{}) IMaybe{
+func Maybe(val interface{}) fMaybe{
 	if (val == nil){
-		return Nothing{};
+		return N();
 	}
-	return Just{value:val}
+	return J(val);
 }
 
-func (n Nothing) Fmap(m Morphism)IMaybe{
-	return Nothing{};
+func (n Nothing) Fmap(m Morphism) IFunctor{
+	return N();
 }
 
-func (n Just) Fmap(fn Morphism) IMaybe{
+func (n Just) Fmap(fn Morphism) IFunctor{
 	return Maybe(fn(n.value));
 }
+
+
+func (n Nothing) A(ft IFunctor) IApplicative{
+	return N();
+}
+
+func (a Just) A(ft IFunctor) IApplicative{
+	var applicativeFunc Morphism = a.value.(Morphism);
+
+	return ft.Fmap(applicativeFunc).(fMaybe);
+}
+
