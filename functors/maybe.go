@@ -4,16 +4,11 @@ import (
 	. "github.com/sqdron/go-category"
 )
 
-type fMaybe interface {
+type IMaybe interface {
 	IApplicative
 }
 
-//type aMaybe interface {
-//	IApplicative
-//}
-
-
-func Maybe(val interface{}) fMaybe{
+func Maybe(val interface{}) IMaybe {
 	if (val == nil){
 		return N();
 	}
@@ -36,6 +31,6 @@ func (n Nothing) A(ft IFunctor) IApplicative{
 func (a Just) A(ft IFunctor) IApplicative{
 	var applicativeFunc Morphism = a.value.(Morphism);
 
-	return ft.Fmap(applicativeFunc).(fMaybe);
+	return ft.Fmap(applicativeFunc).(IMaybe);
 }
 
