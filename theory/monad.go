@@ -1,4 +1,4 @@
-package category
+package theory;
 
 type Monad interface {
 	Return(value interface{}) Monad

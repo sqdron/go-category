@@ -1,4 +1,4 @@
-package functors
+package theory;
 
 import (
 	"testing"
@@ -38,5 +38,18 @@ func Test_Maybe_Squence_Double_And_Nothing(t *testing.T) {
 
 		result := Maybe(5).Fmap(nothingBack).Fmap(doubleMe);
 		So(result, should.Resemble, Nothing{});
+	});
+}
+
+func Test_Maybe_Squence_Double_In_S_Style(t *testing.T) {
+	Convey("Call maybe an apply morphism and one morphism wich return Nil", t, func() {
+		var doubleMe Morphism = func(i interface{}) interface{} {
+			return 2 * i.(int)
+		};
+
+		result := doubleMe.S().Just(7);
+
+		j := result.(Just);
+		So(j.value, should.Equal, 14);
 	});
 }

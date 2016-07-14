@@ -1,16 +1,15 @@
-package functors
+package theory;
 
 import (
 	"testing"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/smartystreets/assertions/should"
-	"github.com/sqdron/go-category"
 )
 
 func Test_Maybe_Applicative_Sum(t *testing.T) {
 	Convey("Just call Maybe with sum applicative", t, func() {
-		var add category.Morphism = func(value interface{}) interface{} {
-			var result category.Morphism = func(value2 interface{}) interface{} {
+		var add Morphism = func(value interface{}) interface{} {
+			var result Morphism = func(value2 interface{}) interface{} {
 				return value.(int) + value2.(int);
 			}
 			return result;
@@ -23,7 +22,7 @@ func Test_Maybe_Applicative_Sum(t *testing.T) {
 
 func Test_Maybe_Applicative_Add_3(t *testing.T) {
 	Convey("Just call Maybe with +3 applicative", t, func() {
-		var add category.Morphism = func(value interface{}) interface{} {
+		var add Morphism = func(value interface{}) interface{} {
 			return value.(int) + 3;
 		}
 
@@ -34,8 +33,8 @@ func Test_Maybe_Applicative_Add_3(t *testing.T) {
 
 func Test_Maybe_Applicative_Multiplicate(t *testing.T) {
 	Convey("Just call Maybe with multiplication applicative", t, func() {
-		var mult category.Morphism = func(value interface{}) interface{} {
-			var result category.Morphism = func(value2 interface{}) interface{} {
+		var mult Morphism = func(value interface{}) interface{} {
+			var result Morphism = func(value2 interface{}) interface{} {
 				return value.(int) * value2.(int);
 			}
 			return result;
@@ -49,8 +48,8 @@ func Test_Maybe_Applicative_Multiplicate(t *testing.T) {
 
 func Test_Maybe_Applicative_Multiplicate_With_Nothing(t *testing.T) {
 	Convey("Just call Maybe with multiplication applicative and nothing", t, func() {
-		var mult category.Morphism = func(value interface{}) interface{} {
-			var result category.Morphism = func(value2 interface{}) interface{} {
+		var mult Morphism = func(value interface{}) interface{} {
+			var result Morphism = func(value2 interface{}) interface{} {
 				return value.(int) * value2.(int);
 			}
 			return result;
@@ -60,4 +59,21 @@ func Test_Maybe_Applicative_Multiplicate_With_Nothing(t *testing.T) {
 		So(result, should.Resemble, Nothing{});
 	});
 }
-
+//
+//func Test_Maybe_Applicative_Sum_S_Style(t *testing.T) {
+//	Convey("Just call Maybe with sum applicative", t, func() {
+//		var add Morphism = func(value interface{}) interface{} {
+//			var result Morphism = func(value2 interface{}) interface{} {
+//				return value.(int) + value2.(int);
+//			}
+//			return result;
+//		}
+//
+//		j4:= J(4);
+//		j6:= J(6);
+//
+//		result := add.S(j4).A(j6);
+//		j := result.(Just);
+//		So(j.value, should.Equal, 10);
+//	});
+//}

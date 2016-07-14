@@ -1,8 +1,4 @@
-package functors;
-
-import (
-	. "github.com/sqdron/go-category"
-)
+package theory;
 
 type IMaybe interface {
 	IApplicative
@@ -30,7 +26,22 @@ func (n Nothing) A(ft IFunctor) IApplicative{
 
 func (a Just) A(ft IFunctor) IApplicative{
 	var applicativeFunc Morphism = a.value.(Morphism);
-
 	return ft.Fmap(applicativeFunc).(IMaybe);
 }
 
+
+type FMapFunc func(IFunctor) IFunctor
+
+func (m FMapFunc) Just(value interface{}) IFunctor {
+	return m(J(value));
+}
+
+func (m FMapFunc) Nothing(value interface{}) IFunctor {
+	return N();
+}
+
+func (m Morphism) S() FMapFunc {
+	return func(j IFunctor) IFunctor{
+		return j.Fmap(m);
+	}
+}
