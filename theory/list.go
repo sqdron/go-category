@@ -1,19 +1,19 @@
 package theory;
 
-import "github.com/sqdron/go-category/helpers"
+//import "github.com/sqdron/go-category/helpers"
 
 type list []interface{};
 
-type Ilist interface {
+type IList interface {
 	IMonad
 }
 
-//TODO: replace on arguments range ...items
-func List(slice interface{}) Category {
-	var lst list = list{};
-	if (slice != nil){
-		lst = helpers.InterfaceSlice(slice);
+func List(slice ...interface{}) Category {
+	if (slice == nil){
+
+		return Category{context:list{}}
 	};
+	var lst list = slice;
 	return Category{context:lst};
 }
 
@@ -22,12 +22,10 @@ func FromList(lst list) Category {
 }
 
 func (val list) Map(f Morphism) Category{
-	//TODO: allocate memory
 	var result list = []interface{}{};
 	for _, v := range val {
 		result = append(result, f(v))
 	}
-	//return FromList(result);
 	return FromList(result);
 }
 
@@ -37,7 +35,6 @@ func (val list) Applicative(jm Category) Category{
 		return Nothing()
 	}
 	var f Morphism = appl.(Morphism);
-	//TODO: allocate memory
 	var result list = []interface{}{};
 	for _, v := range val {
 		result = append(result, f(v))

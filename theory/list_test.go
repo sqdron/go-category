@@ -17,7 +17,7 @@ func Test_Monad_List(t *testing.T) {
 	};
 
 	Convey("Construct Maybe", t, func() {
-		j5 := List([]int{1, 3, 5, 7});
+		j5 := List(1, 3, 5, 7);
 		So(isEqual(j5.Value(), []int{1, 3, 5, 7}), should.BeTrue);
 		Convey("And Double it", func() {
 			j10 := j5.FMap(doubleFunc);
