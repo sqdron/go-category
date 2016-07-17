@@ -4,44 +4,65 @@ type IMaybe interface {
 	IApplicative
 }
 
-func Maybe(val interface{}) IMaybe {
+type just struct {
+	value interface{}
+};
+
+type nothing struct {
+};
+
+func Maybe(val interface{}) Category {
 	if (val == nil){
-		return N();
+		return Nothing();
+	};
+	return Just(val);
+}
+
+func Just(value interface{}) Category {
+	var res Category = Category{};
+	res.context = just{value : value};
+	return res;
+}
+
+func Nothing() Category {
+	return Category{context:nothing{}}
+}
+
+// fmap f (Just val) = Just (f val)
+func (val just) FMap(f Morphism) Category{
+	return Maybe(f(val.value));
+}
+
+// fmap f Nothing = Nothing
+func (val nothing) FMap(f Morphism) Category {
+	return Nothing();
+}
+
+func (val just) AMap(jm Category) Category{
+	var appl = jm.Value();
+	if (appl == empty{}) {
+		return Nothing()
 	}
-	return J(val);
+	var f Morphism = appl.(Morphism);
+	return Maybe(f(val.value));
 }
 
-func (n Nothing) Fmap(m Morphism) IFunctor{
-	return N();
+// fmap f Nothing = Nothing
+func (val nothing) AMap(jm Category) Category {
+	return Nothing();
 }
 
-func (n Just) Fmap(fn Morphism) IFunctor{
-	return Maybe(fn(n.value));
+func (val just) Value() interface {}{
+	return val.value;
 }
 
-
-func (n Nothing) A(ft IFunctor) IApplicative{
-	return N();
+func (val nothing) Value() interface{} {
+	return empty{};
+}
+func (mp fMap) Just(val interface{}) Category {
+	return mp(Just(val));
 }
 
-func (a Just) A(ft IFunctor) IApplicative{
-	var applicativeFunc Morphism = a.value.(Morphism);
-	return ft.Fmap(applicativeFunc).(IMaybe);
-}
-
-
-type FMapFunc func(IFunctor) IFunctor
-
-func (m FMapFunc) Just(value interface{}) IFunctor {
-	return m(J(value));
-}
-
-func (m FMapFunc) Nothing(value interface{}) IFunctor {
-	return N();
-}
-
-func (m Morphism) S() FMapFunc {
-	return func(j IFunctor) IFunctor{
-		return j.Fmap(m);
-	}
+func (mp fMap) Nothing() Category {
+	return Nothing();
 }

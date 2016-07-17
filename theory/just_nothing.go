@@ -1,17 +1,5 @@
 package theory;
 
-type Just struct {
-	value interface{}
-}
+type empty struct{};
 
-type Nothing struct {}
-
-type Morphism func(interface{}) interface{};
-
-func J(value interface{}) Just {
-	return Just{value:value};
-}
-
-func N() Nothing {
-	return Nothing{};
-}
+type any interface {};
