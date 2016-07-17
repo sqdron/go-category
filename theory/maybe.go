@@ -1,7 +1,7 @@
 package theory;
 
 type IMaybe interface {
-	IApplicative
+	IMonad
 }
 
 type just struct {
@@ -52,6 +52,14 @@ func (val nothing) AMap(jm Category) Category {
 	return Nothing();
 }
 
+func (val just) Bind(f func(interface{}) Category) Category{
+	return f(val.value);
+}
+
+func (val nothing) Bind(func(interface{}) Category) Category{
+	return Nothing();
+}
+
 func (val just) Value() interface {}{
 	return val.value;
 }
@@ -64,5 +72,5 @@ func (mp fMap) Just(val interface{}) Category {
 }
 
 func (mp fMap) Nothing() Category {
-	return Nothing();
+	return mp(Nothing());
 }
