@@ -7,24 +7,25 @@ type Category struct {
 }
 
 type IFunctor interface {
-	FMap(Morphism) Category;
+	Map(Morphism) Category;
 	Value() interface{};
 }
 
 type IApplicative interface {
 	IFunctor
-	AMap(jm Category) Category;
+	Applicative(jm Category) Category;
 }
 
 type IMonad interface {
 	IApplicative
 	Bind(func(interface{}) Category) Category;
+
 }
 
 type fMap func(j Category) Category;
 
 func (cat Category) FMap(m Morphism) Category {
-	return cat.context.(IFunctor).FMap(m);
+	return cat.context.(IFunctor).Map(m);
 }
 
 func (cat Category) Value() interface{} {
@@ -37,12 +38,12 @@ func (cat Category) Bind(m func(interface{}) Category) Category {
 
 func (m Morphism) S() fMap {
 	return func(c Category) Category {
-		return c.context.(IFunctor).FMap(m);
+		return c.context.(IFunctor).Map(m);
 	}
 }
 
 func (jm Category) A() fMap {
 	return func(c Category) Category {
-		return c.context.(IApplicative).AMap(jm);
+		return c.context.(IApplicative).Applicative(jm);
 	}
 }

@@ -29,16 +29,16 @@ func Nothing() Category {
 }
 
 // fmap f (Just val) = Just (f val)
-func (val just) FMap(f Morphism) Category{
+func (val just) Map(f Morphism) Category{
 	return Maybe(f(val.value));
 }
 
 // fmap f Nothing = Nothing
-func (val nothing) FMap(f Morphism) Category {
+func (val nothing) Map(f Morphism) Category {
 	return Nothing();
 }
 
-func (val just) AMap(jm Category) Category{
+func (val just) Applicative(jm Category) Category{
 	var appl = jm.Value();
 	if (appl == empty{}) {
 		return Nothing()
@@ -48,7 +48,7 @@ func (val just) AMap(jm Category) Category{
 }
 
 // fmap f Nothing = Nothing
-func (val nothing) AMap(jm Category) Category {
+func (val nothing) Applicative(jm Category) Category {
 	return Nothing();
 }
 
