@@ -51,8 +51,8 @@ func (m Morphism) S() fMap {
 }
 
 //A is a * in a Haskel style implementation
-func (jm Category) A() fMap {
+func (cat Category) A() fMap {
 	return func(c Category) Category {
-		return c.context.(IApplicative).Applicative(jm)
+		return c.context.(IApplicative).Applicative(cat)
 	}
 }
