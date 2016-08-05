@@ -1,4 +1,4 @@
-package theory;
+package theory
 
 func (m Morphism) Compose2(middleware Morphism) Morphism {
 	return func(ctx interface{}) interface{} {

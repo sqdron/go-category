@@ -1,6 +1,4 @@
-package theory;
-
-//import "github.com/sqdron/go-category/helpers"
+package theory
 
 type list []interface{};
 

@@ -1,5 +1,5 @@
-package theory;
+package theory
 
-type empty struct{};
+type empty struct{}
 
-type any interface {};
+type any interface {}
