@@ -1,6 +1,6 @@
-package theory;
+package theory
 
-type right func() any;
+type right func() any
 
 type left func() any
 
