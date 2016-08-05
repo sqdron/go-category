@@ -1,5 +1,6 @@
 package theory
 
+//IMaybe is na Maybe monad implementation interface
 type IMaybe interface {
 	IMonad
 }
