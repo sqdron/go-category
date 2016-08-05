@@ -22,7 +22,7 @@ func Maybe(val interface{}) Category {
 
 //Just constructor
 func Just(value interface{}) Category {
-	return Category{context:just{value: value}}
+	return Category{context: just{value: value}}
 }
 
 //Nothing constructor
@@ -78,7 +78,6 @@ func (val nothing) Value() interface{} {
 func (mp fMap) Just(val interface{}) Category {
 	return mp(Just(val))
 }
-
 
 //Nothing implementation
 func (mp fMap) Nothing() Category {
