@@ -2,7 +2,7 @@ package helpers
 
 import "reflect"
 
-//Take slice as an interface and return slice of interfaces
+//InterfaceSlice takes slice as an interface and return slice of interfaces
 func InterfaceSlice(slice interface{}) []interface{} {
 	s := reflect.ValueOf(slice)
 	if s.Kind() != reflect.Slice {
